@@ -15,3 +15,39 @@ app.get('/', function(req, res) {
 http://expressjs.com/zh-cn/guide/routing.html
 
 文档中还提到，可以 res.status(404).send('xxx');
+
+来自栈溢出网站的一条回答:
+````
+res.send
+
+    res.send is only in Express js.
+    Performs many useful tasks for simple non-streaming responses.
+    Ability to automatically assigns the Content-Length HTTP response header field.
+    Ability to provides automatic HEAD & HTTP cache freshness support.
+
+    Practical explanation
+        res.send can only be called once, since it is equivalent to res.write + res.end()
+
+        Example
+
+        app.get('/user/:id', function (req, res) {
+            res.send('OK');
+        });
+
+for more details expressjs.com/en/api.html
+
+res.write
+
+    Can be called multiple times to provide successive parts of the body.
+
+    Example
+
+    response.write('<html>');
+    response.write('<body>');
+    response.write('<h1>Hello, World!</h1>');
+    response.write('</body>');
+    response.write('</html>');
+    response.end();
+
+
+````
