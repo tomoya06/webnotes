@@ -62,4 +62,9 @@ app.get('/path/:id', (req, res) {
 })
 ````
 
+3. 
+使用路由中间层时，注意在route.js中要导出module.exports = route供上层使用。
+
+
+
 
