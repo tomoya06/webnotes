@@ -65,6 +65,24 @@ app.get('/path/:id', (req, res) {
 3. 
 使用路由中间层时，注意在route.js中要导出module.exports = route供上层使用。
 
+4.
+值得注意的是，app.send之后前端的显示就交给浏览器了，而不是服务器负责了，nodejs就不起作用了。
+
+前后端的交互是通过一般的href跳转或者ajax请求来完成。
+
+服务器向客户端的话就是websocket咯。
+
+
+页面跳转方法总结：
+````
+window.location.href = '/destination';  //confirmed
+top.location = '/des';                  //unsure
+window.navigate = '/des';               //unsure
+
+window.history.back(-1);
+window.history.go(-1);
+````
+
 
 
 
