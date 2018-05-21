@@ -1,3 +1,5 @@
+1. 
+
 由一道练习引出的问题。
 
 下述代码中，发现若使用两次res.send会报错，提示Can't set headers after they are sent.
@@ -51,3 +53,13 @@ res.write
 
 
 ````
+
+2. 
+在express中，要取得文件路径中的某个param，可以这样
+````
+app.get('/path/:id', (req, res) {
+    var getid = req.params.id;
+})
+````
+
+
