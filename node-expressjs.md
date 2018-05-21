@@ -82,7 +82,13 @@ window.navigate = '/des';               //unsure
 window.history.back(-1);
 window.history.go(-1);
 ````
-
+5.
+nodejs中的文件路径：
+````
+__dirname: 总是返回被执行的 js 所在文件夹的绝对路径
+__filename: 总是返回被执行的 js 的绝对路径
+process.cwd(): 总是返回运行 node 命令时所在的文件夹的绝对路径
+````
 
 
 
