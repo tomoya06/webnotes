@@ -30,7 +30,7 @@ nodelist则不一定。
 但如果添加/删除新元素则无法察觉。
 
 
-# dom operation
+### dom operation
 ````
 var a = document.getElementById("dom");
       del_space(a); //清理空格
@@ -60,4 +60,33 @@ jQuery.nextAll() //返回所有之后的兄弟节点
 jQuery.siblings() //返回兄弟姐妹节点，不分前后
 
 jQuery.find(expr)  //跟jQuery.filter(expr)完全不一样。jQuery.filter()是从初始的jQuery对象集合中筛选出一部分，而jQuery.fi
+````
+### more operation
+````
+// get reference to DOM element
+var el = document.querySelector(".main-content");
+ 
+//----Adding a class------
+ 
+/* jQuery */
+$(el).addClass("someClass");
+ 
+/* native equivalent */
+el.classList.add("someClass");
+ 
+//----Removing a class-----
+ 
+/* jQuery */
+$(el).removeClass("someClass");
+ 
+/* native equivalent */
+el.classList.remove("someClass");
+ 
+//----Does it have class---
+ 
+/* jQuery */
+if($(el).hasClass("someClass"))
+ 
+/* native equivalent */
+if(el.classList.contains("someClass"))
 ````
