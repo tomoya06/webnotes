@@ -61,6 +61,14 @@ app.get('/path/:id', (req, res) {
     var getid = req.params.id;
 })
 ````
+如果不是经express的请求req，需要手动进行url.parse操作
+````
+var url = require('url');
+var url_parts = url.parse(request.url, true);
+var query = url_parts.query;
+````
+
+
 
 3. 
 使用路由中间层时，注意在route.js中要导出module.exports = route供上层使用。
