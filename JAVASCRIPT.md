@@ -10,14 +10,20 @@
   * 两种类型区别在于储存位置不同：
     * 原始数据类型直接存储在栈(stack)中的简单数据段，占据空间小、大小固定，属于被频繁使用数据，所以放入栈中存储； 
     * 引用数据类型存储在堆(heap)中的对象,占据空间大、大小不固定。如果存储在栈中，将会影响程序运行的性能；引用数据类型在栈中存储了指针，该指针指向堆中该实体的起始地址。当解释器寻找引用值时，会首先检索其在栈中的地址，取得地址后从堆中获得实体
+  * null vs undefined
+    * null表示一个值被定义了但并没有赋值，undefined表示根本不存在这个定义
+    * typeof null === object; typeof undefined === undefined
+    * Number(null) === 0; Number(undefined) === NaN
+    * null == undefined //=> true; null === undefined //=>false 
 
 * 类型检测
   * typeof：经常用来检测一个变量是不是最基本的数据类型。结果包括number/string/object/boolean/undefined/function。
-  > typeof null ==> object
 
   * instanceof：用来判断某个构造函数的 prototype 属性所指向的对象是否存在于另外一个要检测对象的原型链上。也就是用来判断一个引用类型的变量具体是不是某种类型的对象。对基本类型没有作用，因为基本类型没有原型链。
 
-  * 另外还可以使用constructor / toString 来检测。参考 https://harttle.land/2015/09/18/js-type-checking.html
+  * 另外还可以使用constructor / toString 来检测：a.constructor ; Object.prototype.toString.call(obj) 参考 https://harttle.land/2015/09/18/js-type-checking.html
+
+  > 要检测自定义的类型，推荐使用a.constructor。toString只能返回内置对象；instanceof能配上原型链上的所有对象。
 
 * 注意点
   * 对JS来说，基本类型是传值引用，引用类型是穿共享调用。传值调用本质上传递的是变量的值的拷贝。传共享调用本质上是传递对象的指针的拷贝，其指针也是变量的值。所以传共享调用也可以说是传值调用。
@@ -115,7 +121,7 @@ Cat.prototype.constructor = Cat;
     * func.apply(thisValue, [...args]) 
       * 找出数组最大元素：Math.max.apply(null, [10, 2, 4]);  //==> 10
       * 将数组的空元素变成undefined：Array.apply(null, [2, , 4]); //==> [2. undefined, 4]
-      * 将类似数组的对象（比如arguments）转换成标准数组：Array.prototype.slice.apply(Array, arguments); 
+      * 将类似数组的对象（比如arguments）转换成标准数组：call 也可以Array.prototype.slice.apply(arguments); 
     * func.bind(thisValue)
   * 参考文献 http://javascript.ruanyifeng.com/oop/this.html
 
@@ -124,6 +130,7 @@ Cat.prototype.constructor = Cat;
 * 全局函数无法查看局部函数的内部细节，但局部函数可以查看其上层的函数细节，直至全局细节。当需要从局部函数查找某一属性或方法时，如果当前作用域没有找到，就会上溯到上层作用域查找，直至全局函数，这种组织形式就是作用域链。
 
 * 闭包：简单来说是一个嵌套的function。把一个函数的内部函数暴露出来，让接受了这个暴露的内部函数的函数可以读到原来那个函数的内部属性。或者可以用于封装一类函数。
+  * 闭包的参数和变量不会被垃圾回收机制回收
 > 参考 https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Closures https://web.archive.org/web/20100825182303/http://www.felixwoo.com/archives/247 和http://www.ruanyifeng.com/blog/2009/08/learning_javascript_closures.html
 
 ### 创建对象的方式
@@ -135,6 +142,22 @@ Cat.prototype.constructor = Cat;
 * 混合模式：构造函数模式和原型模式的结合。
 * 其他详见 http://www.ruanyifeng.com/blog/2010/05/object-oriented_javascript_inheritance.html
 
+## AJAX(asynchronous javascript and xml)
+>  异步传输+js+xml。所谓异步，简单地解释就是：向服务器发送请求的时候，我们不必等待结果，而是可以同时做其他的事情，等到有了结果它自己会根据设定进行后续操作，与此同时，页面是不会发生整页刷新的，提高了用户体验。
+> 
+> 原生js使用XMLHttpRequest发送GET请求的代码见基础笔记
+
+* 解决浏览器缓存的问题
+  * 缓存机制：详见https://zhuanlan.zhihu.com/p/25953524。关键点：
+    * expires：response header里的过期时间，未过期前都读取强缓存
+    * cache-control：max-age(单位为s)，代表在这个时间内再次发送请求会读取强缓存
+  * 解决方法：
+    * xmlhttp.setRequestHeader("If-Modified-Since", "0");
+    * xmlhttp.setRequestHeader("Cache-Control", "no-cache");
+    * url += \`fresh=${Math.random()}`;
+    * url += \`nowtime=${new Date().getTime()}`;
+    * $.ajaxSetup({cache: false});
+
 ## 常见问题
 
 * window对象和document对象
@@ -142,21 +165,100 @@ Cat.prototype.constructor = Cat;
   * Document 接口提供了一些在浏览器服务中作为页面内容入口点而加载的一些页面，也就是 DOM 树。
 
 * 【事件】事件处理：冒泡和防止默认行为
+  * IE的事件是冒泡事件；火狐有捕获和冒泡
+  * 添加事件 https://segmentfault.com/a/1190000002455890
+  ````
+  element.addEventListener("event", function(ev) {
+    alert(ev.target.id);        // eventedElement.id
+    alert(ev.currentTarget.id); // element.id
+    alert(ev.this.id);          // element.id
+  });
+  element.attachEvent("onevent", function(ev) {
+    alert(ev.srcElement.id);
+  });                                               // IE<9
+  ````
   * 防止冒泡
   ````
   function myfn(e){
-      window.event? window.event.cancelBubble = true : e.stopPropagation();
+      window.event? e.cancelBubble = true : e.stopPropagation();
   }
   ````
 
   * 防止默认行为
   ````
   function myfn(e){
-      window.event? window.event.returnValue = false : e.preventDefault();
+      window.event? e.returnValue = false : e.preventDefault();
   }
   ````
   > return false：javascript的return false只会阻止默认行为，而是用jQuery的话则既阻止默认行为又防止对象冒泡。
 
+* ["1", "2", "3"].map(parseInt)的返回值
+  * Array.map(callback)会给callback传入arrItemValue, inde, array三个参数
+  * parseInt()有两个参数，string 和 radix(可选)，radix表示目标整数的基数，2-36。0表示10进制。
+  * 于是这个函数相当于：1转成十进制的1，2转换失败，为NaN，二进制里没有3，3也转换失败，为NaN
+````
+["1", "2", "3"].map(parseInt(value, index));
+````
+
+* arguments 不是数组，只是类似数组，Array的属性和方法它只有length别的都没有，例如没有map()
+
+* 严格模式"use strict"
+  * 消除Javascript语法的一些不合理、不严谨之处，减少一些怪异行为;
+  * 消除代码运行的一些不安全之处，保证代码运行的安全；
+  * 提高编译器效率，增加运行速度；
+  * 为未来新版本的Javascript做好铺垫。
+> http://www.ruanyifeng.com/blog/2013/01/javascript_strict_mode.html
+
+* new操作符具体干了什么 new Foo() TODO
+  1. 一个继承自 Foo.prototype 的新对象被创建。
+  2. 使用指定的参数调用构造函数 Foo ，并将 this 绑定到新创建的对象。new Foo 等同于 new Foo()，也就是没有指定参数列表，Foo 不带任何参数调用的情况。
+  3. 由构造函数返回的对象就是 new 表达式的结果。如果构造函数没有显式返回一个对象，则使用步骤1创建的对象。（一般情况下，构造函数不返回值，但是用户可以选择主动返回对象，来覆盖正常的对象创建步骤）
+````
+var obj = {};
+obj.__proto__ = Foo.prototype;
+var result = Foo.call(obj, [...arguments]);
+return typeof result === 'object' ? result: obj;
+````
+
+* 一行代码
+````
+[].forEach.call($$("*"),function(a){a.style.outline="1px solid #"+(~~(Math.random()*(1<<24))).toString(16)})
+
+// http://www.html-js.com/article/2315
+````
+
+* JavaScript延迟加载
+  * JS延迟加载，也就是等页面加载完成之后再加载 JavaScript 文件。JS延迟加载有助于提高页面加载速度。
+  * 方法总结
+````
+// 1.
+<script src="test1.js" defer="defer"></script>
+// 告诉浏览器立即下载但延迟执行。
+<script src="test1.js" async></scrupt>
+// 异步加载页面其他内容。不等待脚本下载执行
+// 以上两种方法不能控制脚本加载的顺序。
+
+// 2.
+// 把js引入放在页面底部。
+
+// 3. 动态创建DOM
+<script type="text/javascript">
+  function downloadJSAtOnLoad() {
+    var element = document.createElement("script");
+    element.src="test1.js";
+    document.body.appendChild(element);
+  }
+  if (window.addEventListener) {
+    window.addEventListener("load", downloadJSAtOnLoad, false);
+  } else if (window.attachEvent) {
+    window.attachEvent("onload", downloadJSAtOnLoad);
+  } else {
+    window.onload = downloadJSAtOnLoad;
+  }
+</script> 
+````
+
+* require-module.exports / import-export
 
 ## ES6 专题
 
@@ -330,7 +432,4 @@ getLocation();
 
 TODO
 
-http1.1 vs http 2.0, http状态🐴
-网站安全 CROS XSS
-继承
-prototype __proto__ apply() call() bind()
+http1.1 vs http 2.0
