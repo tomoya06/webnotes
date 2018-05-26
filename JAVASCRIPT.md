@@ -258,7 +258,9 @@ return typeof result === 'object' ? result: obj;
 </script> 
 ````
 
-* require-module.exports / import-export
+* require-module.exports / import-export TODO
+  * node的module遵循CommonJS规范，同步加载模块
+  * requireJS遵循AMD规范，异步加载模块
 
 ## ES6 专题
 
@@ -429,7 +431,3 @@ getLocation();
 详细介绍参考阮一峰的讲解 http://javascript.ruanyifeng.com/htmlapi/webworker.html
 
 关键点：主程序通过worker构建函数构建worker，要用worker.postMessage(msg)来唤醒worker启动，worker内设置listener监听这个msg，监听到之后开始执行，执行完又通过self.postMessage(cmsg)来回应主程序。主程序也要设置一个listener，听到回复之后做动作。
-
-TODO
-
-http1.1 vs http 2.0
