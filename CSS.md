@@ -175,6 +175,12 @@
 * 【优化】style标签写在body前与后有什么区别
   * 写在head标签中利于浏览器逐步渲染（resources downloading->CSSOM+DOM->RenderTree(composite)->Layout->paint）。具体渲染过程请参考https://blog.csdn.net/wozaixiaoximen/article/details/50640954##1
   * 写在body标签后由于浏览器以逐行方式对html文档进行解析，当解析到写在尾部的样式表（外联或写在style标签）会导致浏览器停止之前的渲染，等待加载且解析样式表完成之后重新渲染，在windows的IE下可能会出现FOUC现象（即样式失效导致的页面闪烁问题）
+  
+* 【布局】换行问题
+  * word-break：word-break will create a break at the exact place where text would otherwise overflow its container (even if putting an entire word on its own line would negate the need for a break).
+    * normal / break-word / break-all / keep-all
+  * overflow-wrap：overflow-wrap will only create a break if an entire word cannot be placed on its own line without overflowing.
+    * normal / break-word
 
 ## Containing block 包含块
 
