@@ -181,6 +181,9 @@
     * normal / break-word / break-all / keep-all
   * overflow-wrap：overflow-wrap will only create a break if an entire word cannot be placed on its own line without overflowing.
     * normal / break-word
+  * <pre>换行方法
+    * word-break: break-word // 非FF
+    * white-space: pre-wrap  // FF
 
 ## Containing block 包含块
 
