@@ -101,3 +101,12 @@ ReactDOM.render(
   document.getElementById('root')
 );
 ````
+
+### virtual DOM
+
+### 事件机制
+
+> https://segmentfault.com/a/1190000008782645
+> 
+> 因为react中的事件机制不是原生js的事件机制了，事件没有绑定在原生的DOM上面。
+

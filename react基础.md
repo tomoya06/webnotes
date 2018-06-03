@@ -271,7 +271,19 @@ this.setState(function(prevState, props) {
 
 * 阻止默认行为：不能使用返回 false 的方式阻止默认行为。你必须明确的使用 preventDefault。而且不需要担心跨浏览器（主要是IE）的兼容性问题。
 
-* 注意！！！类的方法默认是不会绑定 this 的。如果你忘记绑类的方法，即在构造器内加入this.function = this.function.bind(this) 并把它传入 onClick, 当你调用这个函数的时候 this 的值会是 undefined。另一种非实验性方法是使用箭头函数传入，但每次组件渲染的时候都会重新创建一个不同的回掉函数。或者在contructor中声明你的函数this.yourFunction=()=>{}。官方建议还是在构造器中绑定：
+* 注意！！！类的方法默认是不会绑定 this 的。两种方法：
+
+````
+//...
+  constructor {
+    this.yourFunction = this.yourFunction.bind(this);
+  }
+
+// ...
+  yourFunction = ()=> {
+    // ...
+  }
+````
 
 ````
 //...

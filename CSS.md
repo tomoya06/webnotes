@@ -11,10 +11,11 @@
 3. 标签选择器（div, h1, p）
 4. 相邻选择器（h1 + p）
 5. 子选择器（ul > li）
-6. 后代选择器（li a）
-7. 通配符选择器（ * ）
-8. 属性选择器（a[rel = "external"]）
-9. 伪类选择器（ a:hover, li:nth-child，　:not(.class) ）
+6. 兄弟选择器 (.li1 ~ li)
+7. 后代选择器（li a）
+8. 通配符选择器（ * ）
+9. 属性选择器（a[rel="external"]）
+10. 伪类选择器（ a:hover, li:nth-child，:not(.class) ）
 
 ### 优先级
 
@@ -80,7 +81,7 @@
   > 解决方法:统一通过getAttribute()获取自定义属性。
 
 * 【兼容】Chrome 中文界面下默认会将小于 12px 的文本强制按照 12px 显示
-  > 可通过加入 CSS 属性 -webkit-text-size-adjust: none; 解决。
+  > 可通过加入 CSS 属性 -webkit-text-size-adjust: none; 解决(放屁)。可以加入transform: -webkit-scale(0.8)勉强解决，但是盒子还是原来的盒子；切成图片吧
 
 * 【布局】超链接访问过后hover样式就不出现了 被点击访问过的超链接样式不在具有hover和active了。
   > 解决方法是改变CSS属性的排列顺序:L-V-H-A :  a:link {} a:visited {} a:hover {} a:active {}
@@ -90,7 +91,7 @@
   > 解决：font-size=0 / 不换行 / 使用注释标签 / 把右书名号放下一行 / margin负值
 
 * 【兼容】【布局】visibility: collapse的作用
-  > 对于普通元素visibility:collapse;会将元素完全隐藏,不占据页面布局空间,与display:none;表现相同。如果目标元素为table,visibility:collapse;将table隐藏，但是会占据页面布局空间. 仅在Firefox下起作用,IE会显示元素,Chrome会将元素隐藏,但是占据空间。
+  > 对于普通元素visibility:collapse;会将元素完全隐藏,不占据页面布局空间,与display:none;表现相同。如果目标元素为table,visibility:collapse;不同浏览器的效果不同：chrome中使collapse和hidden一样；firefox/IE和display:none一样
 
 * 【布局】position / display / margin / float 特性叠加影响
   > 详细参见：https://blog.csdn.net/qq_28506819/article/details/72864581 
@@ -105,7 +106,7 @@
   * 与浮动元素同级的非浮动元素会跟随其后
   * 若非第一个元素浮动，则该元素之前的元素也需要浮动，否则会影响页面显示的结构 
   > 解决方法见 https://blog.csdn.net/taotao_web/article/details/78082522。清除原理在于对父元素添加伪元素::after，对其设置空内容，然后clear:both
-  * 设置元素浮动之后，该元素的display值变成block
+  * 设置元素浮动之后，该元素的display值变成block。关于该点可以看MDN https://developer.mozilla.org/en-US/docs/Web/CSS/float
 
 * 【布局】媒体查询/响应式布局
   * 原理是根据页面宽度来调整布局。此概念於2010年5月由國外著名網頁設計師Ethan Marcotte所提出。
@@ -162,6 +163,17 @@
 
 * 【布局】line-height
   > 用于设置多行元素的空间量，比如文本。对于块级元素，它指定元素行盒（line boxes）的最小高度。对于非替代的inline元素，它用于计算行盒（line box）的高度。
+
+* 【布局】垂直居中方案：
+  * 对div中的div垂直居中：
+````
+// 1. transform
+// 2. flex
+.father {
+  display: flex;
+  align-item: center;
+}
+````
 
 * 【布局】px / em / % / (CSS3分界线) / rem / vw / vh / vm 的区别
   > 参见这篇讲的很清楚了 https://www.jianshu.com/p/82f02af17e78

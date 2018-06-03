@@ -1,6 +1,15 @@
 
 # Javascript
 
+## 解惑
+
+* 关于JavaScript单线程异步的说明：
+  * JavaScript 的确是单线程的
+  * 异步是 浏览器的 JavaScript 引擎做的工作
+
+> https://www.cnblogs.com/Mainz/p/3552717.html
+
+
 ## 类型和传参
 
 * 基本数据类型：undefined / null / boolean / string / number / object / symbol(es6)
@@ -74,6 +83,17 @@
   * 对象的拷贝：需要保证以下两点
     * 新对象与元对象有相同的原型
     * 系对象与元对象有相同的实例属性
+
+  * 一些方法的比较
+    * Object.defineProperty(obj, propname, props) / Object.defineProperties(obj, props); 具体参考https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty 
+      * 可配置writable/configurable/enumerable；默认均为false，但如果该属性之前已经存在，比如obj.name="name"这种方法添加了属性，则均为true（但这和definePRoperty没关系啊笨）
+      * 对constructor obj使用。
+
+    * Object.getOwnPropertyNames(obj) 返回所有自己的而非继承的属性，返回array
+    * Object.keys(obj) 在上面的基础上，只返回可枚举的属性enumerable，也是array
+    * Object.getOwnPropertyDescriptor(obj, prop) 返回这个属性的值，只能是自己的属性
+    * 要获取non-enumerable / non-own 的属性，更多关于元素属性的比较和总结见MDN https://developer.mozilla.org/en-US/docs/Web/JavaScript/Enumerability_and_ownership_of_properties
+
 
   * 如何实现继承：更多参考阮一峰 http://www.ruanyifeng.com/blog/2010/05/object-oriented_javascript_inheritance.html
     * 构造继承
@@ -164,34 +184,6 @@ Cat.prototype.constructor = Cat;
   * window 对象表示一个包含DOM文档的窗口，其 document 属性指向窗口中载入的 DOM文档 。在标签浏览器中，每个标签具有自己的 window 对象（如果你在开发扩展，浏览器窗口也是一个独立的 window ）
   * Document 接口提供了一些在浏览器服务中作为页面内容入口点而加载的一些页面，也就是 DOM 树。
 
-* 【事件】事件处理：冒泡和防止默认行为
-  * IE的事件是冒泡事件；火狐有捕获和冒泡
-  * 添加事件 https://segmentfault.com/a/1190000002455890
-  ````
-  element.addEventListener("event", function(ev) {
-    alert(ev.target.id);        // eventedElement.id
-    alert(ev.currentTarget.id); // element.id
-    alert(ev.this.id);          // element.id
-  });
-  element.attachEvent("onevent", function(ev) {
-    alert(ev.srcElement.id);
-  });                                               // IE<9
-  ````
-  * 防止冒泡
-  ````
-  function myfn(e){
-      window.event? e.cancelBubble = true : e.stopPropagation();
-  }
-  ````
-
-  * 防止默认行为
-  ````
-  function myfn(e){
-      window.event? e.returnValue = false : e.preventDefault();
-  }
-  ````
-  > return false：javascript的return false只会阻止默认行为，而是用jQuery的话则既阻止默认行为又防止对象冒泡。
-
 * ["1", "2", "3"].map(parseInt)的返回值
   * Array.map(callback)会给callback传入arrItemValue, inde, array三个参数
   * parseInt()有两个参数，string 和 radix(可选)，radix表示目标整数的基数，2-36。0表示10进制。
@@ -258,26 +250,72 @@ return typeof result === 'object' ? result: obj;
 </script> 
 ````
 
-* require-module.exports / import-export TODO
-  * node的module遵循CommonJS规范，同步加载模块
-  * requireJS遵循AMD规范，异步加载模块
+### 一些API
+
+* 【事件】事件处理：冒泡和防止默认行为
+  * IE的事件是冒泡事件；火狐有捕获和冒泡
+  * 添加事件 https://segmentfault.com/a/1190000002455890
+  ````
+  element.addEventListener("event", function(ev) {
+    alert(ev.target.id);        // eventedElement.id
+    alert(ev.currentTarget.id); // element.id
+    alert(ev.this.id);          // element.id
+  });
+  element.attachEvent("onevent", function(ev) {
+    alert(ev.srcElement.id);
+  });                                               // IE<9
+  ````
+  * 防止冒泡
+  ````
+  function myfn(e){
+      window.event? e.cancelBubble = true : e.stopPropagation();
+  }
+  ````
+
+  * 防止默认行为
+  ````
+  function myfn(e){
+      window.event? e.returnValue = false : e.preventDefault();
+  }
+  ````
+  > return false：javascript的return false只会阻止默认行为，而是用jQuery的话则既阻止默认行为又防止对象冒泡。
+
+* 获取/修改元素attr element.getAttribute(attr) / element.setAttribute(attr, value)
+* 获取/修改元素class element.classList
+> 那还要jQuery干什么？？https://developer.mozilla.org/en-US/docs/Web/API/Element/classList
+  * 方法：element.classList.add(...classname)/.remove(...classname)/.replace(old, new)
+    * .toggle(class[, condition])
+    * .contains(classname)
+
+* dataset
+> https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLElement/dataset
+  * 设置方法：在HTML中，以data-开头，全小写，可以数字；在JS中转换成对应camelCase
+  * 获取和操作见MDN
+
+* offsetWidth/offsetHeight vs clientWidth/clientHeight vs scrollWidth/scrollHeight
+> 详细见MDN的比较: https://developer.mozilla.org/en-US/docs/Web/API/CSS_Object_Model/Determining_the_dimensions_of_elements
+  * offset 是指这个元素在页面上实际占据的大小，包括margin/padding/content/scrollbar(if any)，实际就是这个元素的borderbox盒子大小
+  * client 是指这个元素的可视content的大小，不包括scrollbars。
+  * scroll 是指这个元素整个content的大小，包括因为overflow而不能显示的部分，
+  * 注意这些属性是对父元素才有区别。对content本身这些属性大小都一样。
 
 ## ES6 专题
 
-### map & set
+* map & set
   * set vs WeakSet：两个都是不重复的值的集合，与数组类似，但weakset成员只能是对象。WeakSet不能遍历，因为成员都是弱引用。
   * map vs WeakMap：键值对的集合，类似于对象，但键的范围不仅限于字符串。weakmap的键只能接受对象（null除外。null本身也不是引用类型）；weakmap键名所指向的对象不计入垃圾回收机制。
 > 详见阮一峰 http://es6.ruanyifeng.com/#docs/set-map
 
 
-### class
+* class
+  * ES6 要求，子类的构造函数必须执行一次super函数。
+  * prototype / __proto__：大多数浏览器的 ES5 实现之中，每一个对象都有__proto__属性，指向对应的构造函数的prototype属性。Class 作为构造函数的语法糖，同时有prototype属性和__proto__属性，因此同时存在两条继承链。
+    * 子类的__proto__属性，表示构造函数的继承，总是指向父类。
+    * 子类prototype属性的__proto__属性，表示方法的继承，总是指向父类的prototype属性。
 
-* ES6 要求，子类的构造函数必须执行一次super函数。
-
-* prototype / __proto__：大多数浏览器的 ES5 实现之中，每一个对象都有__proto__属性，指向对应的构造函数的prototype属性。Class 作为构造函数的语法糖，同时有prototype属性和__proto__属性，因此同时存在两条继承链。
-
-  * 子类的__proto__属性，表示构造函数的继承，总是指向父类。
-  * 子类prototype属性的__proto__属性，表示方法的继承，总是指向父类的prototype属性。
+* require-module.exports / import-export TODO
+  * node的module遵循CommonJS规范，同步加载模块
+  * requireJS遵循AMD规范，异步加载模块
 
 ## HTML5带来的新接口
 

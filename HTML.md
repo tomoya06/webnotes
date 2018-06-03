@@ -58,14 +58,50 @@
 
 ## HTML5 新特性
 
-### 新元素：
+* 图像方面 canvas
+* 位置方面 Geolocation
+* 存储方面 localStorage,sessionStorage
+* 多任务方面 webworker
+* 持久连接方面websocket
+* 离线响应请求方面 service-worker
+* 语义化标签 header，nav,artical,section,footer
+* 表单控件 calendar,time,color,email,search,date
 
-* 表单：
-    < input> 加入新类型，如type=email|url|number|range|date|time|week|month|datetime|datetime-local...
-    < output>
+## 常见问题
 
-* 页面元素：
-  * < video>
-  * < audio>
-  * < canvas>
+* data-xxx 属性的作用是什么？
 
+  * HTML5 data- ：定义和用法
+    * data-* 属性用于存储页面或应用程序的私有自定义数据。
+    * data-* 属性赋予我们在所有 HTML 元素上嵌入自定义 data 属性的能力。
+    * 存储的（自定义）数据能够被页面的 JavaScript 中利用，以创建更好的用户体验（不进行 Ajax 调用或服务器端数据库查询）。
+  * data-* 属性包括两部分：
+    * 属性名不应该包含任何大写字母，并且在前缀 "data-" 之后必须有至少一个字符
+    * 属性值可以是任意字符串
+
+> 注释：用户代理会完全忽略前缀为 "data-" 的自定义属性。这里的data-前缀就被称为data属性，其可以通过脚本进行定义，也可以应用CSS属性选择器进行样式设置。数量不受限制，在控制和渲染数据的时候提供了非常强大的控制。
+> 
+> 见JavaScript中的dataset操作
+
+
+````
+<div class="oop-data-test" data-obj='{"uid":"007","name":"hacker","age":"unkown","address":"UFO"}'>
+</div>
+
+//js
+
+// data-obj='{"uid":"007","name":"hacker","age":"unkown","address":"UFO"}'
+// Object (must be , data-obj=`{"key":"value"}`)
+
+let test = document.querySelector('[data-obj*="uid"');​​​​​​​
+let data_obj = JSON.parse(test.dataset.obj);​​​​​​​
+````
+
+* 标准模式 / 怪异模式
+  * 判断方法：
+
+````
+alert(window.top.document.compatMode);
+// BackCompat 怪异模式
+// CSS1Compat 标准模式
+````
